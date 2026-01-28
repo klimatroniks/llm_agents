@@ -1,1 +1,8 @@
-*env
+.env
+.env.*
+profiles/*
+__pycache__/
+*.pyc
+.venv/
+venv/
+.playwright/

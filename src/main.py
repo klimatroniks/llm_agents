@@ -24,7 +24,7 @@ def main():
         print("\n--- RESULT ---")
         print(result)
     finally:
-        browser.close()
+        browser.close()  # TODO: можно не выключать браузер
 
 
 if __name__ == "__main__":
