@@ -79,9 +79,9 @@ class Browser:
         # Фильтрация
         uniq: List[ElementHandle] = []
         seen = set()
-        for el in elems:
+        for element in elems:
             try:
-                box = el.bounding_box()
+                box = element.bounding_box()
                 if not box:
                     continue
                 if box["width"] < 10 or box["height"] < 10:
@@ -90,28 +90,28 @@ class Browser:
                 if key in seen:
                     continue
                 seen.add(key)
-                uniq.append(el)
+                uniq.append(element)
             except Exception:
                 continue
 
         candidates: List[Dict[str, str]] = []
-        for i, el in enumerate(uniq[:max_candidates]):
-            cid = f"c{i}"
-            self._candidate_handles[cid] = el
+        for index, element in enumerate(uniq[:max_candidates]):
+            cid = f"c{index}"
+            self._candidate_handles[cid] = element
             text = ""
             tag = ""
             hint = ""
             try:
-                tag = (el.evaluate("e => e.tagName") or "").lower()
-                text = (el.inner_text() or "").strip()
+                tag = (element.evaluate("e => e.tagName") or "").lower()
+                text = (element.inner_text() or "").strip()
                 if not text:
-                    text = (el.get_attribute("aria-label") or "").strip()
+                    text = (element.get_attribute("aria-label") or "").strip()
                 if not text:
-                    text = (el.get_attribute("title") or "").strip()
+                    text = (element.get_attribute("title") or "").strip()
                 if not text:
-                    text = (el.get_attribute("placeholder") or "").strip()
+                    text = (element.get_attribute("placeholder") or "").strip()
 
-                hint = (el.get_attribute("href") or "").strip()
+                hint = (element.get_attribute("href") or "").strip()
             except Exception:
                 pass
 
@@ -129,32 +129,32 @@ class Browser:
         }
 
     def click_candidate(self, candidate_id: str) -> str:
-        el = self._candidate_handles.get(candidate_id)
-        if not el:
+        element = self._candidate_handles.get(candidate_id)
+        if not element:
             return f"Candidate {candidate_id} not found. Take a new snapshot."
 
         try:
-            el.scroll_into_view_if_needed(timeout=5000)
+            element.scroll_into_view_if_needed(timeout=5000)
         except Exception:
             pass
 
         # обычный click
         try:
-            el.click(timeout=5000)
+            element.click(timeout=5000)
             return f"Clicked {candidate_id}"
         except Exception:
             pass
 
         # force click
         try:
-            el.click(timeout=5000, force=True)
+            element.click(timeout=5000, force=True)
             return f"Clicked {candidate_id} (force)"
         except Exception:
             pass
 
         # координатный клик по центру
         try:
-            box = el.bounding_box()
+            box = element.bounding_box()
             if not box:
                 raise RuntimeError("No bounding box")
             x = box["x"] + box["width"] / 2
