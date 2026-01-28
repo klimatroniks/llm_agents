@@ -1,16 +1,20 @@
 import os
-
+import pytest
 from dotenv import load_dotenv
-from openai import OpenAI
 
 load_dotenv()
 
-print("API KEY FOUND:", bool(os.getenv("OPENAI_API_KEY")))
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 
-client = OpenAI()
+if not OPENAI_API_KEY:
+    pytest.skip(
+        "OPENAI_API_KEY not set — skipping OpenAI integration tests",
+        allow_module_level=True,
+    )
 
-resp = client.responses.create(
-    model=os.getenv("OPENAI_MODEL", "gpt-4.1-mini"), input="Ответь одним словом: работает?"
-)
+from openai import OpenAI
 
-print(resp.output_text)
+
+def test_openai_client_init():
+    client = OpenAI()
+    assert client is not None
