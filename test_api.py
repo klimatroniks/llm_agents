@@ -1,8 +1,8 @@
 import os
-from openai import OpenAI
 
 import pytest
 from dotenv import load_dotenv
+from openai import OpenAI
 
 load_dotenv()
 
