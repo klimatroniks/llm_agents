@@ -6,6 +6,9 @@ from typing import Any
 
 from openai import OpenAI
 
+from typing import cast
+from openai.types.chat import ChatCompletionMessageParam, ChatCompletionToolParam
+
 from .browser import Browser
 from .prompt import DEVELOPER_PROMPT, SYSTEM_PROMPT
 from .tools import TOOLS
@@ -33,8 +36,8 @@ class Agent:
 
             resp = self.client.chat.completions.create(
                 model=self.model,
-                messages=messages,
-                tools=TOOLS,
+                messages=cast(list[ChatCompletionMessageParam], messages),
+                tools=cast(list[ChatCompletionToolParam], TOOLS),
                 tool_choice="auto",
             )
 
