@@ -2,11 +2,9 @@ from __future__ import annotations
 
 import json
 import os
-from typing import Any
+from typing import Any, cast
 
 from openai import OpenAI
-
-from typing import cast
 from openai.types.chat import ChatCompletionMessageParam, ChatCompletionToolParam
 
 from .browser import Browser
