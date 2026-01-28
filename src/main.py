@@ -1,7 +1,10 @@
 import os
+
 from dotenv import load_dotenv
-from .browser import Browser
+
 from .agent import Agent
+from .browser import Browser
+
 load_dotenv()
 
 

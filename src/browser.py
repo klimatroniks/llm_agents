@@ -1,9 +1,9 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Any, Dict, List
+from typing import Any
 
-from playwright.sync_api import sync_playwright, Page, BrowserContext, ElementHandle
+from playwright.sync_api import BrowserContext, ElementHandle, Page, sync_playwright
 
 
 @dataclass
@@ -22,10 +22,12 @@ class Browser:
             headless=headless,
             viewport={"width": 1280, "height": 800},
         )
-        self._page: Page = self._context.pages[0] if self._context.pages else self._context.new_page()
+        self._page: Page = (
+            self._context.pages[0] if self._context.pages else self._context.new_page()
+        )
 
         # candidate_id -> ElementHandle
-        self._candidate_handles: Dict[str, ElementHandle] = {}
+        self._candidate_handles: dict[str, ElementHandle] = {}
 
     @property
     def page(self) -> Page:
@@ -58,7 +60,7 @@ class Browser:
         loc.type(text, delay=10)
         return f"Typed text into {selector}"
 
-    def snapshot(self, max_candidates: int = 40) -> Dict[str, Any]:
+    def snapshot(self, max_candidates: int = 40) -> dict[str, Any]:
         self._candidate_handles.clear()
 
         selectors = [
@@ -69,7 +71,7 @@ class Browser:
             "[role=button]",
             "[onclick]",
         ]
-        elems: List[ElementHandle] = []
+        elems: list[ElementHandle] = []
         for sel in selectors:
             try:
                 elems.extend(self._page.query_selector_all(sel))
@@ -77,7 +79,7 @@ class Browser:
                 pass
 
         # Фильтрация
-        uniq: List[ElementHandle] = []
+        uniq: list[ElementHandle] = []
         seen = set()
         for element in elems:
             try:
@@ -94,7 +96,7 @@ class Browser:
             except Exception:
                 continue
 
-        candidates: List[Dict[str, str]] = []
+        candidates: list[dict[str, str]] = []
         for index, element in enumerate(uniq[:max_candidates]):
             cid = f"c{index}"
             self._candidate_handles[cid] = element

@@ -19,9 +19,7 @@ TOOLS = [
             "description": "Get current page url/title and a list of clickable candidates",
             "parameters": {
                 "type": "object",
-                "properties": {
-                    "max_candidates": {"type": "integer", "minimum": 1, "maximum": 200}
-                },
+                "properties": {"max_candidates": {"type": "integer", "minimum": 1, "maximum": 200}},
                 "required": ["max_candidates"],
                 "additionalProperties": False,
             },

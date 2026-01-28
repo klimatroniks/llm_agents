@@ -2,12 +2,12 @@ from __future__ import annotations
 
 import json
 import os
-from typing import Any, Dict, List
+from typing import Any
 
 from openai import OpenAI
 
 from .browser import Browser
-from .prompt import SYSTEM_PROMPT, DEVELOPER_PROMPT
+from .prompt import DEVELOPER_PROMPT, SYSTEM_PROMPT
 from .tools import TOOLS
 
 
@@ -22,7 +22,7 @@ class Agent:
         self.browser = browser
 
     def run(self, task: str, max_steps: int = 12) -> str:
-        messages: List[Dict[str, Any]] = [
+        messages: list[dict[str, Any]] = [
             {"role": "system", "content": SYSTEM_PROMPT},
             {"role": "developer", "content": DEVELOPER_PROMPT},
             {"role": "user", "content": task},
@@ -81,7 +81,7 @@ class Agent:
 
         return "Stopped: reached max_steps without completion."
 
-    def _execute_tool(self, name: str, args: Dict[str, Any]) -> Dict[str, Any]:
+    def _execute_tool(self, name: str, args: dict[str, Any]) -> dict[str, Any]:
         try:
             if name == "browser_goto":
                 return {"ok": True, "content": self.browser.goto(args["url"])}
